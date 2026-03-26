@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-byte-version: '20'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -43,7 +46,19 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Create or Update Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "IT Inventory Pro (Güncel Sürüm)"
+          body: "Otomatik olarak oluşturulmuş en güncel APK sürümü."
+          draft: false
+          prerelease: false
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: it-inventory-pro-apk
