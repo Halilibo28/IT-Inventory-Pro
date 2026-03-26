@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">IT Inventory Pro</string>
+    <string name="title_activity_main">IT Inventory Pro</string>
+    <string name="package_name">com.itinventory.pro</string>
+    <string name="custom_url_scheme">com.itinventory.pro</string>
+</resources>
