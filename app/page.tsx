@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Loader2, Plus, Monitor, LayoutList } from "lucide-react"
+import { Loader2, Plus, Monitor, LayoutList, PackageCheck } from "lucide-react"
 import Link from "next/link"
 
 interface Classroom {
@@ -69,11 +69,17 @@ export default function Dashboard() {
   return (
     <AuthGuard>
       <div className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
-        <header className="flex items-center justify-between mb-8">
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Menü ve Sınıf Yönetimi</h1>
             <p className="text-muted-foreground">Sınıfları katlara (lokasyonlara) göre ekleyip inceleyebilirsiniz.</p>
           </div>
+          <Link href="/supplies">
+            <Button variant="outline" className="gap-2 border-primary/30 hover:bg-primary/10">
+              <PackageCheck className="h-4 w-4 text-primary" />
+              Sınıf Alımları & Zimmet
+            </Button>
+          </Link>
         </header>
 
         <section className="mb-10 p-5 border rounded-lg bg-card/50 shadow-sm">

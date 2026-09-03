@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Monitor, StickyNote, Menu, LogOut, Package, CheckSquare, Download } from "lucide-react"
+import { Monitor, StickyNote, Menu, LogOut, Package, CheckSquare, Download, PackageCheck } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -73,6 +73,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { title: "Dashboard", href: "/", icon: Monitor },
+    { title: "Sınıf Alımları", href: "/supplies", icon: PackageCheck },
     { title: "Kişisel Notlarım", href: "/notes", icon: StickyNote },
     { title: "Yapılacak İşler", href: "/tasks", icon: CheckSquare, badge: pendingTasksCount },
     { title: "Android için İndir", href: "/it-inventory.apk", icon: Download, download: true },
