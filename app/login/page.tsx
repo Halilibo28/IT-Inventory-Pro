@@ -18,30 +18,23 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
+  const USERS: Record<string, string> = {
+    Halil: "Halil@1234",
+    Efe: "Efe@1234",
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    if (username === "Halil" && password === "Halil@1234") {
+    if (USERS[username] && USERS[username] === password) {
       try {
         // Doğru şifre ise Firebase veritabanına erişebilmek için anonim giriş yapıyoruz
         await signInAnonymously(auth)
-        router.push("/")
-      } catch (err: any) {
-        setError("Firebase yapılandırma hatası: Lütfen Firebase'den 'Anonymous' girişini aktif edin.")
-      } finally {
-        setLoading(false)
-      }
-    } else {
-      setError("Kullanıcı adı veya şifre hatalı.")
-      setLoading(false)
-    }
-
-    if (username === "Efe" && password === "Efe@1234") {
-      try {
-        // Doğru şifre ise Firebase veritabanına erişebilmek için anonim giriş yapıyoruz
-        await signInAnonymously(auth)
+        if (typeof window !== "undefined") {
+          localStorage.setItem("currentUsername", username)
+        }
         router.push("/")
       } catch (err: any) {
         setError("Firebase yapılandırma hatası: Lütfen Firebase'den 'Anonymous' girişini aktif edin.")

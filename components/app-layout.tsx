@@ -59,7 +59,17 @@ export function SidebarNav({ className, items, onClick, ...props }: SidebarNavPr
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
+  const [username, setUsername] = React.useState("Kullanıcı")
   const pendingTasksCount = useTaskNotifications()
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("currentUsername")
+      if (stored) {
+        setUsername(stored)
+      }
+    }
+  }, [])
 
   const navItems = [
     { title: "Dashboard", href: "/", icon: Monitor },
@@ -69,6 +79,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   ]
 
   const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("currentUsername")
+    }
     signOut(auth)
   }
 
@@ -94,11 +107,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <SidebarNav items={navItems} onClick={() => setOpen(false)} />
                 </div>
               </ScrollArea>
-              <div className="p-4 border-t flex justify-between items-center">
-                <Button variant="ghost" className="justify-start gap-2" onClick={handleLogout}>
+              <div className="p-4 border-t flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">Oturum: {username}</span>
+                  <ThemeToggle />
+                </div>
+                <Button variant="ghost" className="justify-start gap-2 w-full" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" /> Çıkış Yap
                 </Button>
-                <ThemeToggle />
               </div>
             </SheetContent>
           </Sheet>
@@ -122,7 +138,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </ScrollArea>
         <div className="border-t p-4 flex flex-col gap-4">
           <div className="flex items-center justify-between px-2">
-            <span className="text-sm font-medium text-muted-foreground">Oturum: Halil</span>
+            <span className="text-sm font-medium text-muted-foreground">Oturum: {username}</span>
             <ThemeToggle />
           </div>
           <Button variant="outline" className="w-full justify-start gap-2" onClick={handleLogout}>
