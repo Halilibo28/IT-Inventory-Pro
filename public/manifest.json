@@ -1,0 +1,21 @@
+{
+  "name": "IT Inventory Pro",
+  "short_name": "IT-Inv Pro",
+  "description": "Profesyonel IT Envanter ve Takip Sistemi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#010103",
+  "theme_color": "#010103",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
