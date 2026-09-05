@@ -29,7 +29,7 @@ jobs:
         run: npm run build
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -38,7 +38,12 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        env:
+          CI: true
+          CAPACITOR_TELEMETRY: 'false'
+        run: |
+          npx cap telemetry off || true
+          npx cap sync android
 
       - name: Build Android APK
         run: |

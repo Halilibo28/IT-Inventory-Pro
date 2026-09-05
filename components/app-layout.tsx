@@ -76,7 +76,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     { title: "Sınıf Alımları", href: "/supplies", icon: PackageCheck },
     { title: "Kişisel Notlarım", href: "/notes", icon: StickyNote },
     { title: "Yapılacak İşler", href: "/tasks", icon: CheckSquare, badge: pendingTasksCount },
-    { title: "Android için İndir", href: "/it-inventory.apk", icon: Download, download: true },
+    { 
+      title: "Android için İndir", 
+      href: "https://github.com/Halilibo28/IT-Inventory-Pro/releases/download/latest/app-debug.apk", 
+      icon: Download 
+    },
   ]
 
   const handleLogout = () => {
