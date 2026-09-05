@@ -41,9 +41,7 @@ jobs:
         env:
           CI: true
           CAPACITOR_TELEMETRY: 'false'
-        run: |
-          npx cap telemetry off || true
-          npx cap sync android
+        run: npm run cap:sync
 
       - name: Build Android APK
         run: |
