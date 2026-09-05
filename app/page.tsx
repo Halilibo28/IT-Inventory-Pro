@@ -1,14 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ref, onValue, push, set } from "firebase/database"
+import { ref, onValue, push, set, remove } from "firebase/database"
 import { db } from "@/lib/firebase"
 import { AuthGuard } from "@/components/auth-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Loader2, Plus, Monitor, LayoutList, PackageCheck } from "lucide-react"
+import { Loader2, Plus, Monitor, LayoutList, PackageCheck, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 interface Classroom {
@@ -58,6 +58,16 @@ export default function Dashboard() {
     }
   }
 
+  const handleDeleteClassroom = async (id: string, name: string) => {
+    if (confirm(`"${name}" sınıfını silmek istediğinize emin misiniz?`)) {
+      try {
+        await remove(ref(db, `classrooms/${id}`))
+      } catch (error) {
+        console.error("Error deleting classroom: ", error)
+      }
+    }
+  }
+
   // Group Classrooms by Location
   const groupedClassrooms = classrooms.reduce((acc, cls) => {
     const loc = cls.location || "Kayıtsız Lokasyon"
@@ -90,14 +100,14 @@ export default function Dashboard() {
           <form className="grid grid-cols-1 sm:grid-cols-12 gap-4" onSubmit={handleAddClassroom}>
             <div className="sm:col-span-4">
               <Input
-                placeholder="Sınıf Adı (Örn: A-101)"
+                placeholder="Sınıf Adı"
                 value={newClassName}
                 onChange={(e) => setNewClassName(e.target.value)}
               />
             </div>
             <div className="sm:col-span-5">
               <Input
-                placeholder="Bulunduğu Kat (Örn: 1. Kat, Zemin Kat)"
+                placeholder="Bulunduğu Kat"
                 value={newClassLocation}
                 onChange={(e) => setNewClassLocation(e.target.value)}
               />
@@ -123,7 +133,7 @@ export default function Dashboard() {
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-lg font-semibold border-b pb-2">
               <LayoutList className="h-5 w-5" />
-              Sınıf Listesi (Katalara Göre)
+              Sınıf Listesi (Katlara Göre)
             </div>
             
             {/* @ts-expect-error Shadcn Accordion type mismatch */}
@@ -136,21 +146,37 @@ export default function Dashboard() {
                   <AccordionContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pt-2 pb-4">
                       {classes.map((cls) => (
-                        <Link href={`/classrooms?id=${cls.id}`} key={cls.id}>
-                          <Card className="hover:border-primary/50 hover:bg-muted/50 transition-all cursor-pointer h-full">
-                            <CardHeader className="pb-3 pt-4 px-4">
-                              <CardTitle className="flex items-center gap-2 text-base">
-                                <Monitor className="h-4 w-4 text-primary" />
-                                {cls.name}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="px-4 pb-4">
-                              <div className="text-xs text-muted-foreground flex justify-between">
-                                <span>Detay ve Notlar &rarr;</span>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Link>
+                        <div key={cls.id} className="relative group">
+                          <Link href={`/classrooms?id=${cls.id}`} className="block h-full">
+                            <Card className="hover:border-primary/50 hover:bg-muted/50 transition-all cursor-pointer h-full">
+                              <CardHeader className="pb-3 pt-4 px-4 pr-12">
+                                <CardTitle className="flex items-center gap-2 text-base">
+                                  <Monitor className="h-4 w-4 text-primary shrink-0" />
+                                  <span className="truncate">{cls.name}</span>
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="px-4 pb-4">
+                                <div className="text-xs text-muted-foreground flex justify-between">
+                                  <span>Detay ve Notlar &rarr;</span>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </Link>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-2.5 right-2.5 h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 z-10 transition-colors"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleDeleteClassroom(cls.id, cls.name)
+                            }}
+                            title="Sınıfı Sil"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       ))}
                     </div>
                   </AccordionContent>

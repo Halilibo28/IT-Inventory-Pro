@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { ref, onValue, push, set, get, remove } from "firebase/database"
 import { db } from "@/lib/firebase"
 import { AuthGuard } from "@/components/auth-guard"
@@ -41,6 +41,7 @@ interface SupplyItem {
 }
 
 function ClassroomContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const classId = searchParams.get("id")
   
@@ -174,6 +175,18 @@ function ClassroomContent() {
     }
   }
 
+  const handleDeleteClassroom = async () => {
+    if (!classId) return
+    if (confirm(`"${className}" sınıfını ve bu sınıfa ait kayıtları silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`)) {
+      try {
+        await remove(ref(db, `classrooms/${classId}`))
+        router.push("/")
+      } catch (error) {
+        console.error("Error deleting classroom:", error)
+      }
+    }
+  }
+
   const handleSaveNotes = async () => {
     if (!classId) return
     setSavingNotes(true)
@@ -216,13 +229,25 @@ function ClassroomContent() {
           <p className="text-muted-foreground text-sm mt-1">Yüklü programları, alınan donanım/malzemeleri ve teknik notları yönetin.</p>
         </div>
 
-        <Link href="/supplies">
-          <Button variant="outline" size="sm" className="gap-2">
-            <PackageCheck className="h-4 w-4 text-primary" />
-            Tüm Sınıf Alımları
-            <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/supplies">
+            <Button variant="outline" size="sm" className="gap-2">
+              <PackageCheck className="h-4 w-4 text-primary" />
+              Tüm Sınıf Alımları
+              <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+            </Button>
+          </Link>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+            onClick={handleDeleteClassroom}
+            title="Sınıfı Sil"
+          >
+            <Trash2 className="h-4 w-4 text-destructive" />
+            Sınıfı Sil
           </Button>
-        </Link>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
