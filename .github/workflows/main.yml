@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
@@ -41,13 +41,14 @@ jobs:
         env:
           CI: true
           CAPACITOR_TELEMETRY: 'false'
-        run: npm run cap:sync
+        run: |
+          npx --no-install @capacitor/cli sync android || npx @capacitor/cli sync android
 
       - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Create or Update Release
         uses: softprops/action-gh-release@v2
@@ -57,6 +58,7 @@ jobs:
           body: "Otomatik olarak oluşturulmuş en güncel APK sürümü."
           draft: false
           prerelease: false
+          make_latest: true
           files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
