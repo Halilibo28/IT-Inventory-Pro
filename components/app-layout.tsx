@@ -29,7 +29,7 @@ export function SidebarNav({ className, items, onClick, ...props }: SidebarNavPr
   const pathname = usePathname()
 
   return (
-    <nav className={cn("flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1", className)} {...props}>
+    <nav className={cn("flex flex-col space-y-1 w-full", className)} {...props}>
       {items.map((item) => {
         const Icon = item.icon
         return (
@@ -39,14 +39,14 @@ export function SidebarNav({ className, items, onClick, ...props }: SidebarNavPr
             onClick={onClick}
             download={item.download}
             className={cn(
-              "justify-start flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors relative",
-              pathname === item.href ? "bg-accent text-accent-foreground" : "transparent"
+              "justify-start flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors relative w-full",
+              pathname === item.href ? "bg-accent text-accent-foreground font-semibold" : "transparent"
             )}
           >
-            <Icon className="h-4 w-4" />
-            <span className="flex-1">{item.title}</span>
+            <Icon className="h-4 w-4 shrink-0" />
+            <span className="flex-1 truncate">{item.title}</span>
             {item.badge !== undefined && Number(item.badge) > 0 && (
-              <span className="absolute right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.5)]">
+              <span className="ml-auto flex h-5 min-w-5 px-1.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.5)]">
                 {item.badge}
               </span>
             )}
